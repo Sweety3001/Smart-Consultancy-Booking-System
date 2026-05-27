@@ -22,15 +22,30 @@ pipeline {
             }
         }
 
-        stage('Check Running Containers') {
+        stage('Stop Old Container') {
             steps {
-                sh 'docker ps'
+                sh '''
+                docker stop laravel-cicd-container || true
+                docker rm laravel-cicd-container || true
+                '''
             }
         }
 
-        stage('Pipeline Success') {
+        stage('Deploy New Container') {
             steps {
-                sh 'echo CI/CD Pipeline Executed Successfully'
+                sh '''
+                docker run -d \
+                --name laravel-cicd-container \
+                -p 9000:8000 \
+                laravel-devops-cicd \
+                php artisan serve --host=0.0.0.0 --port=8000
+                '''
+            }
+        }
+
+        stage('Deployment Success') {
+            steps {
+                sh 'echo Laravel CI/CD Deployment Completed Successfully'
             }
         }
     }
