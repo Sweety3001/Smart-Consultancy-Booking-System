@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: laravel-deployment
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: laravel
+
+  template:
+    metadata:
+      labels:
+        app: laravel
+
+    spec:
+      containers:
+      - name: laravel-container
+
+        image: sweety3005/laravel-devops-cicd:latest
+
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 8000
+
+        env:
+        - name: APP_KEY
+          value: "base64:6VZM024DbEZ6YwMtT0l1rT3jpZOuezIhHBucT6oPcw0="
+
+        - name: DB_CONNECTION
+          value: "mysql"
+
+        - name: DB_HOST
+          value: "mysql_db"
+
+        - name: DB_PORT
+          value: "3306"
+
+        - name: DB_DATABASE
+          value: "laravel"
+
+        - name: DB_USERNAME
+          value: "root"
+
+        - name: DB_PASSWORD
+          value: "root"
+
+        command: ["php"]
+
+        args:
+          [
+            "artisan",
+            "serve",
+            "--host=0.0.0.0",
+            "--port=8000"
+          ]
