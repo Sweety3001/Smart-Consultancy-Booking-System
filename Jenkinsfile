@@ -32,16 +32,24 @@ pipeline {
         }
 
         stage('Deploy New Container') {
-            steps {
-                sh '''
-                docker run -d \
-                --name laravel-cicd-container \
-                -p 9000:8000 \
-                laravel-devops-cicd \
-                php artisan serve --host=0.0.0.0 --port=8000
-                '''
-            }
-        }
+    steps {
+        sh '''
+        docker run -d \
+        --name laravel-cicd-container \
+        -p 9000:8000 \
+        -e APP_KEY=base64:SomeRandomKeyHere123456789= \
+        -e DB_CONNECTION=mysql \
+        -e DB_HOST=mysql_db \
+        -e DB_PORT=3306 \
+        -e DB_DATABASE=laravel \
+        -e DB_USERNAME=root \
+        -e DB_PASSWORD=root \
+        --network bridge \
+        laravel-devops-cicd \
+        php artisan serve --host=0.0.0.0 --port=8000
+        '''
+    }
+}
 
         stage('Deployment Success') {
             steps {
