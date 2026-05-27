@@ -37,8 +37,7 @@ pipeline {
         docker run -d \
         --name laravel-cicd-container \
         -p 9000:8000 \
-        -e APP_KEY=base64:SomeRandomKeyHere123456789= \
-        -e DB_CONNECTION=mysql \
+        -e APP_KEY=base64:6VZM024DbEZ6YwMtT0l1rT3jpZOuezIhHBucT6oPcw0= DB_CONNECTION=mysql \
         -e DB_HOST=mysql_db \
         -e DB_PORT=3306 \
         -e DB_DATABASE=laravel \
