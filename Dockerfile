@@ -1,10 +1,12 @@
 FROM php:8.2-fpm
 
 RUN apt-get update && apt-get install -y \
-    zip \
-    unzip \
     git \
     curl \
+    zip \
+    unzip \
+    nodejs \
+    npm \
     libpng-dev \
     libonig-dev \
     libxml2-dev
@@ -19,6 +21,10 @@ COPY . .
 
 RUN composer install
 
-EXPOSE 9000
+RUN npm install
 
-CMD ["php-fpm"]
+RUN npm run build
+
+EXPOSE 8000
+
+CMD php artisan serve --host=0.0.0.0 --port=8000
