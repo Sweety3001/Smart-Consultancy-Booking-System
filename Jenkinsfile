@@ -44,7 +44,7 @@ pipeline {
         -e DB_DATABASE=laravel \
         -e DB_USERNAME=root \
         -e DB_PASSWORD=root \
-        --network bridge \
+        --network ca2project_laravel \
         laravel-devops-cicd \
         php artisan serve --host=0.0.0.0 --port=8000
         '''
