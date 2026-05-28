@@ -35,10 +35,10 @@ spec:
           value: "mysql"
 
         - name: DB_HOST
-          value: "mysql_db"
+          value: "host.docker.internal"
 
         - name: DB_PORT
-          value: "3306"
+          value: "3307"
 
         - name: DB_DATABASE
           value: "laravel"
