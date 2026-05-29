@@ -41,7 +41,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/consultants', [AdminController::class, 'consultants'])->name('consultants');
         Route::get('/consultants/create', [AdminController::class, 'createConsultant'])->name('consultants.create');
         Route::post('/consultants', [AdminController::class, 'storeConsultant'])->name('consultants.store');
-        Route::delete('/consultants/{id}', [AdminController::class, 'destroyConsultant'])->name('consultants.destroy');
         Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
         Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics');
         Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');

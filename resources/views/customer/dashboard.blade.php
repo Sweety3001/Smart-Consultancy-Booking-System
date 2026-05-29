@@ -134,50 +134,18 @@
                 <a href="{{ route('customer.bookings.index') }}" class="btn btn-sm" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5; border-radius: 50px; padding: 5px 15px; font-weight: 600; text-decoration: none;">View All</a>
             </div>
             <div class="card-body p-0">
-                @if($upcomingBookings->count() > 0)
-                    <div class="list-group list-group-flush border-0">
-                        @foreach($upcomingBookings as $booking)
-                            <div class="list-group-item p-4 border-bottom">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="d-flex align-items-center">
-                                        @if($booking->consultant->user->profile_image)
-                                            <img src="{{ asset('storage/'.$booking->consultant->user->profile_image) }}" class="rounded-circle me-3" width="50" height="50" style="object-fit: cover;">
-                                        @else
-                                            <div class="rounded-circle text-white d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; font-size: 1.2rem; font-weight: bold; background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);">
-                                                {{ substr($booking->consultant->user->name, 0, 1) }}
-                                            </div>
-                                        @endif
-                                        <div>
-                                            <h6 class="mb-1 fw-bold">{{ $booking->service->service_name }}</h6>
-                                            <p class="mb-0 text-muted small">with {{ $booking->consultant->user->name }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-end">
-                                        <div class="badge bg-light text-dark border mb-1 px-3 py-2 rounded-pill">
-                                            <i class="bi bi-calendar3 me-1 text-primary" style="color: #4F46E5 !important;"></i> {{ \Carbon\Carbon::parse($booking->booking_date)->format('M d, Y') }}
-                                        </div>
-                                        <div class="small fw-bold" style="color: #4F46E5;">
-                                            <i class="bi bi-clock me-1"></i> {{ \Carbon\Carbon::parse($booking->booking_time)->format('h:i A') }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-calendar2-x" viewBox="0 0 16 16">
+                            <path d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708z"/>
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/>
+                            <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z"/>
+                        </svg>
                     </div>
-                @else
-                    <div class="empty-state">
-                        <div class="empty-state-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-calendar2-x" viewBox="0 0 16 16">
-                                <path d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708z"/>
-                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/>
-                                <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z"/>
-                            </svg>
-                        </div>
-                        <h5 class="fw-bold text-dark mb-2">No upcoming appointments</h5>
-                        <p class="text-muted mb-4">You don't have any sessions scheduled right now. Ready to learn something new?</p>
-                        <a href="{{ route('customer.consultants') }}" class="btn btn-primary" style="background: #4F46E5; border: none; border-radius: 50px; padding: 10px 25px; font-weight: 500;">Book a Session</a>
-                    </div>
-                @endif
+                    <h5 class="fw-bold text-dark mb-2">No upcoming appointments</h5>
+                    <p class="text-muted mb-4">You don't have any sessions scheduled right now. Ready to learn something new?</p>
+                    <a href="{{ route('customer.consultants') }}" class="btn btn-primary" style="background: #4F46E5; border: none; border-radius: 50px; padding: 10px 25px; font-weight: 500;">Book a Session</a>
+                </div>
             </div>
         </div>
     </div>
@@ -190,7 +158,7 @@
                     </svg>
                 </div>
                 <h5 class="fw-bold text-muted mb-2" style="font-size: 1.1rem;">Total Spent</h5>
-                <h2 class="fw-bolder mb-0" style="color: #4F46E5; font-size: 2.5rem; letter-spacing: -1px;">₹{{ number_format($totalSpent, 2) }}</h2>
+                <h2 class="fw-bolder mb-0" style="color: #4F46E5; font-size: 2.5rem; letter-spacing: -1px;">₹0.00</h2>
             </div>
         </div>
     </div>

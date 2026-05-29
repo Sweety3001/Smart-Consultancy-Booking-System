@@ -158,7 +158,7 @@
                                     <option value="">-- Choose time slot --</option>
                                     <!-- Basic implementation, ideally filtered by selected date via AJAX -->
                                     @foreach($consultant->availabilitySlots->where('is_booked', false) as $slot)
-                                        <option value="{{ $slot->start_time }}">{{ \Carbon\Carbon::parse($slot->start_time)->format('h:i A') }} - {{ \Carbon\Carbon::parse($slot->end_time)->format('h:i A') }}</option>
+                                        <option value="{{ $slot->start_time }}">{{ \Carbon\Carbon::parse($slot->start_time)->format('h:i A') }} - {{ \Carbon\Carbon::parse($slot->end_time)->format('h:i A') }} ({{ \Carbon\Carbon::parse($slot->available_date)->format('M d') }})</option>
                                     @endforeach
                                 </select>
                                 @error('booking_time') <div class="text-danger small mt-2 fw-medium"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div> @enderror

@@ -8,19 +8,7 @@ class CustomerController extends Controller
 {
     public function dashboard()
     {
-        $upcomingBookings = \App\Models\Booking::with('consultant.user', 'service')
-            ->where('customer_id', auth()->id())
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->where('booking_date', '>=', now()->toDateString())
-            ->orderBy('booking_date')
-            ->orderBy('booking_time')
-            ->get();
-
-        $totalSpent = \App\Models\Booking::where('customer_id', auth()->id())
-            ->where('payment_status', 'paid')
-            ->sum('total_amount');
-
-        return view('customer.dashboard', compact('upcomingBookings', 'totalSpent'));
+        return view('customer.dashboard');
     }
 
     public function consultants(Request $request)

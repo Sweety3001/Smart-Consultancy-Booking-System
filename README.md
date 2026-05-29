@@ -1,501 +1,59 @@
-# Laravel DevOps CI/CD Kubernetes Monitoring Project Setup Guide
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-## Project Overview
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-This project demonstrates a complete DevOps workflow using:
+## About Laravel
 
-* Laravel Application
-* Docker Containerization
-* Jenkins CI/CD Pipeline
-* Docker Hub Image Registry
-* Kubernetes Deployment
-* Prometheus Monitoring
-* Grafana Dashboards
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
----
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-# Tech Stack
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-| Tool       | Purpose                 |
-| ---------- | ----------------------- |
-| Laravel    | Web Application         |
-| Docker     | Containerization        |
-| Jenkins    | CI/CD Automation        |
-| Docker Hub | Container Registry      |
-| Kubernetes | Container Orchestration |
-| MySQL      | Database                |
-| Prometheus | Monitoring              |
-| Grafana    | Visualization           |
+## Learning Laravel
 
----
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
 
-# Prerequisites
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-Install the following software before starting:
+## Laravel Sponsors
 
-## Required Software
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-1. Docker Desktop
-2. Kubernetes (Enable from Docker Desktop)
-3. VS Code
-4. Git
-5. kubectl
-6. Jenkins (Docker Container)
+### Premium Partners
 
----
+- **[Vehikl](https://vehikl.com)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Redberry](https://redberry.international/laravel-development)**
+- **[Active Logic](https://activelogic.com)**
 
-# Step 1 — Clone Repository
+## Contributing
 
-```bash
-git clone <YOUR_GITHUB_REPO_URL>
-cd ca2project
-```
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
----
+## Code of Conduct
 
-# Step 2 — Start Docker Desktop
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-Open Docker Desktop and ensure:
+## Security Vulnerabilities
 
-* Docker Engine is running
-* Kubernetes is enabled
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-Verify:
+## License
 
-```bash
-docker ps
-kubectl get nodes
-```
-
-Expected:
-
-```bash
-Ready
-```
-
----
-
-# Step 3 — Build Laravel Docker Image
-
-```bash
-docker build -t laravel-devops-cicd .
-```
-
-Verify:
-
-```bash
-docker images
-```
-
----
-
-# Step 4 — Start MySQL Container
-
-```bash
-docker run -d \
---name mysql_db \
--e MYSQL_ROOT_PASSWORD=root \
--e MYSQL_DATABASE=laravel \
--p 3307:3306 \
-mysql:8.0
-```
-
-Verify:
-
-```bash
-docker ps
-```
-
----
-
-# Step 5 — Run Laravel Container
-
-```bash
-docker run -d \
---name laravel-cicd-container \
--p 9000:8000 \
-laravel-devops-cicd \
-php artisan serve --host=0.0.0.0 --port=8000
-```
-
----
-
-# Step 6 — Configure Laravel Environment
-
-Enter container:
-
-```bash
-docker exec -it laravel-cicd-container bash
-```
-
-Create environment file:
-
-```bash
-cp .env.example .env
-```
-
-Generate APP_KEY:
-
-```bash
-php artisan key:generate
-```
-
-Run migrations:
-
-```bash
-php artisan migrate --force
-```
-
-Exit container:
-
-```bash
-exit
-```
-
-Open application:
-
-```text
-http://localhost:9000
-```
-
----
-
-# Step 7 — Run Jenkins Container
-
-```bash
-docker run -d \
---name jenkins \
---restart=on-failure \
--p 8080:8080 \
--p 50000:50000 \
--v jenkins_home:/var/jenkins_home \
--v /var/run/docker.sock:/var/run/docker.sock \
-custom-jenkins
-```
-
-Get Jenkins password:
-
-```bash
-docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
-```
-
-Open:
-
-```text
-http://localhost:8080
-```
-
----
-
-# Step 8 — Jenkins Pipeline Setup
-
-## Create Pipeline Job
-
-1. Open Jenkins
-2. Click "New Item"
-3. Select "Pipeline"
-4. Add GitHub repository URL
-5. Use Jenkinsfile from repository
-
-Run pipeline.
-
-Expected stages:
-
-* Git Checkout
-* Docker Build
-* Container Verification
-
----
-
-# Step 9 — Push Docker Image to Docker Hub
-
-Login:
-
-```bash
-docker login
-```
-
-Tag image:
-
-```bash
-docker tag laravel-devops-cicd:latest <dockerhub-username>/laravel-devops-cicd:latest
-```
-
-Push image:
-
-```bash
-docker push <dockerhub-username>/laravel-devops-cicd:latest
-```
-
----
-
-# Step 10 — Kubernetes Deployment
-
-Apply deployment:
-
-```bash
-kubectl apply -f k8s/laravel-deployment.yaml
-```
-
-Apply service:
-
-```bash
-kubectl apply -f k8s/laravel-service.yaml
-```
-
-Verify:
-
-```bash
-kubectl get pods
-kubectl get services
-```
-
-Expected:
-
-```bash
-Running
-```
-
----
-
-# Step 11 — Access Laravel via Kubernetes
-
-Use port-forward:
-
-```bash
-kubectl port-forward service/laravel-service 8085:8000
-```
-
-Open:
-
-```text
-http://localhost:8085
-```
-
----
-
-# Step 12 — Install Prometheus
-
-Apply Prometheus:
-
-```bash
-kubectl apply -f k8s/monitoring/prometheus.yaml
-```
-
-Verify:
-
-```bash
-kubectl get pods
-```
-
-Port forward:
-
-```bash
-kubectl port-forward service/prometheus-service 9090:9090
-```
-
-Open:
-
-```text
-http://localhost:9090
-```
-
----
-
-# Step 13 — Install Node Exporter
-
-Apply:
-
-```bash
-kubectl apply -f k8s/monitoring/node-exporter.yaml
-```
-
-Verify targets:
-
-```text
-http://localhost:9090/targets
-```
-
-Expected:
-
-* prometheus → UP
-* node-exporter → UP
-
----
-
-# Step 14 — Install Grafana
-
-Apply:
-
-```bash
-kubectl apply -f k8s/monitoring/grafana.yaml
-```
-
-Port forward:
-
-```bash
-kubectl port-forward service/grafana-service 3000:3000
-```
-
-Open:
-
-```text
-http://localhost:3000
-```
-
-Default credentials:
-
-```text
-Username: admin
-Password: admin
-```
-
----
-
-# Step 15 — Connect Grafana to Prometheus
-
-1. Open Grafana
-2. Go to:
-   Connections → Data Sources
-3. Add Prometheus
-4. URL:
-
-```text
-http://prometheus-service:9090
-```
-
-5. Click:
-   Save & Test
-
----
-
-# Step 16 — Create Monitoring Dashboard
-
-Create new dashboard.
-
-Use metrics like:
-
-```text
-up
-```
-
-```text
-node_memory_MemAvailable_bytes
-```
-
-```text
-rate(node_cpu_seconds_total[1m])
-```
-
----
-
-# Useful Commands
-
-## Docker
-
-```bash
-docker ps
-docker images
-docker logs <container-name>
-docker exec -it <container-name> bash
-```
-
-## Kubernetes
-
-```bash
-kubectl get pods
-kubectl get services
-kubectl describe pod <pod-name>
-kubectl logs <pod-name>
-kubectl delete deployment <deployment-name>
-```
-
----
-
-# Common Issues & Fixes
-
-## ErrImageNeverPull
-
-Change:
-
-```yaml
-imagePullPolicy: Never
-```
-
-to:
-
-```yaml
-imagePullPolicy: Always
-```
-
----
-
-## APP_KEY Error
-
-Generate key:
-
-```bash
-php artisan key:generate
-```
-
----
-
-## MySQL Connection Error
-
-Use:
-
-```text
-DB_HOST=host.docker.internal
-DB_PORT=3307
-```
-
----
-
-## NodePort Not Working
-
-Use port-forward:
-
-```bash
-kubectl port-forward service/<service-name> <local-port>:<service-port>
-```
-
----
-
-# Final Architecture
-
-```text
-GitHub
-   ↓
-Jenkins CI/CD
-   ↓
-Docker Build
-   ↓
-Docker Hub
-   ↓
-Kubernetes Deployment
-   ↓
-Laravel Pods
-   ↓
-Prometheus Monitoring
-   ↓
-Grafana Dashboards
-```
-
----
-
-# Learning Outcomes
-
-This project demonstrates:
-
-* CI/CD pipeline creation
-* Docker containerization
-* Kubernetes orchestration
-* Monitoring and observability
-* Infrastructure debugging
-* DevOps automation workflows
-
----
-
-# Author
-
-Sweety
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

@@ -65,13 +65,6 @@
                                     {{ $consultant->user->is_blocked ? 'Unblock' : 'Block' }}
                                 </button>
                             </form>
-                            <form action="{{ route('admin.consultants.destroy', $consultant->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to completely remove this consultant and ALL of their data (services, bookings, slots)? This action cannot be undone.');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger ms-1" title="Remove Consultant">
-                                    <i class="bi bi-trash"></i> Remove
-                                </button>
-                            </form>
                         </td>
                     </tr>
                     @empty

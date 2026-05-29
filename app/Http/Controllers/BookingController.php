@@ -12,7 +12,7 @@ class BookingController extends Controller
         return view('customer.bookings.create', compact('consultant'));
     }
 
-    public function store(Request $request, \App\Services\BookingService $bookingService)
+    public function store(Request $request)
     {
         $request->validate([
             'consultant_id' => 'required|exists:consultants,id',
@@ -21,12 +21,26 @@ class BookingController extends Controller
             'booking_time' => 'required',
         ]);
 
-        try {
-            $booking = $bookingService->createBooking($request->all(), auth()->id());
-            return redirect()->route('customer.payments.checkout', $booking->id);
-        } catch (\Exception $e) {
-            return back()->withErrors(['booking_time' => $e->getMessage()])->withInput();
-        }
+        $service = \App\Models\Service::findOrFail($request->service_id);
+
+        $booking = \App\Models\Booking::create([
+            'customer_id' => auth()->id(),
+            'consultant_id' => $request->consultant_id,
+            'service_id' => $request->service_id,
+            'booking_date' => $request->booking_date,
+            'booking_time' => $request->booking_time,
+            'status' => 'pending',
+            'payment_status' => 'pending',
+            'total_amount' => $service->price,
+            'notes' => $request->notes,
+        ]);
+
+        \App\Models\AvailabilitySlot::where('consultant_id', $request->consultant_id)
+            ->where('available_date', $request->booking_date)
+            ->where('start_time', $request->booking_time)
+            ->update(['is_booked' => true]);
+
+        return redirect()->route('customer.payments.checkout', $booking->id);
     }
 
     public function customerIndex()

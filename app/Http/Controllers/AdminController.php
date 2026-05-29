@@ -82,15 +82,4 @@ class AdminController extends Controller
 
         return redirect()->route('admin.consultants')->with('success', 'Consultant created successfully.');
     }
-
-    public function destroyConsultant($id)
-    {
-        $consultant = \App\Models\Consultant::findOrFail($id);
-        $user = $consultant->user;
-        
-        // This will cascade delete the consultant, services, slots, bookings, and payments
-        $user->delete();
-
-        return back()->with('success', 'Consultant and all associated data have been permanently removed.');
-    }
 }

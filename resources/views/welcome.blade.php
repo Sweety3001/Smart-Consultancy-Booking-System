@@ -251,7 +251,7 @@
     <nav class="navbar navbar-expand-lg fixed-top navbar-glass">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-                <i class="bi bi-layers-fill me-2" style="color: var(--primary);"></i>ConsultBook
+                <i class="bi bi-layers-fill me-2" style="color: var(--primary);"></i>ConsultRaviBook
             </a>
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="bi bi-list fs-1 text-white"></i>
